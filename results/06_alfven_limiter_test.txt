@@ -1,0 +1,27 @@
+Enzo 64^3, M_S 4.7, identical forcing seed, one with the Alfven-speed limiter (cap 50) and one without.
+Dust statistics over k = [3, 6], dumps from 2 t_dyn on.
+
+== nofloor: 9665 cycles to t = 5.00 t_dyn, 7 dumps used
+   cycles per t_dyn: 0-1: 461 1-2: 1829 2-3: 3595 3-4: 1729 4-5: 2051
+   lowest density 1.56e-04, highest Alfven speed 559, mean density 1.000002
+== vA50: 4571 cycles to t = 5.00 t_dyn, 7 dumps used
+   cycles per t_dyn: 0-1: 461 1-2: 986 2-3: 1032 3-4: 1056 4-5: 1036
+   lowest density 2.38e-03, highest Alfven speed 50, mean density 1.000118
+
+mass added by the limiter: 1.16e-04 of the total
+
+quantity                         nofloor                      vA50
+Ms                   4.658 +- 0.246             4.804 +- 0.263      
+Ma                   1.443 +- 0.064             1.491 +- 0.070      
+sigma_lnrho          1.314 +- 0.051             1.340 +- 0.092      
+aTT                 -2.612 +- 0.754            -2.268 +- 0.629      
+aEE                 -2.384 +- 0.397            -2.017 +- 0.345      
+aBB                 -2.151 +- 0.242            -2.099 +- 0.371      
+bbee                 1.110 +- 0.228             0.891 +- 0.243      
+rte                  0.099 +- 0.181             0.024 +- 0.192      
+arho                -2.758 +- 0.195            -2.562 +- 0.228      
+av                  -3.900 +- 0.279            -4.005 +- 0.184      
+aH                  -3.715 +- 0.337            -3.538 +- 0.108      
+
+The two runs are different realizations once the limiter fires (turbulence is chaotic),
+so agreement within the scatter over dumps is the strongest statement available.

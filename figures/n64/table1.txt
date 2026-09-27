@@ -1,0 +1,19 @@
+Linear fits  alpha_q = a + b M_S + c M_A     (N=64, 21 runs, N=64, fit window k=[3,5])
+
+                    this work                 |        paper (Table 1)
+  quantity        a       b       c    scatter |      a       b       c
+  ------------------------------------------------------------------------
+  alpha_rho      -4.09   0.219   0.160    0.204  |    -3.61   0.160  -0.000
+  alpha_v        -4.01  -0.013   0.104    0.107  |    -3.86   0.020   0.140
+  alpha_H        -3.96   0.010   0.109    0.170  |    -3.31   0.020  -0.280
+  alpha_TT       -4.82   0.300   0.348    0.370  |    -3.66   0.150   0.090
+  alpha_EE       -4.74   0.276   0.596    0.394  |    -3.63   0.170   0.280
+  alpha_BB       -5.56   0.377   0.779    0.549  |    -4.82   0.280   0.640
+
+  inferred from alpha_EE=-2.42, alpha_BB=-2.54: M_S = -1.36, M_A = 4.53   (paper: 4.7, 1.5)
+  <A_BB/A_EE> for M_S>4 : 1.366 +- 0.247 (paper 0.55 +- 0.07, Planck 0.53)
+  <A_EE/A_TT> for M_S>4 : 0.286 +- 0.146 (paper 0.62)
+  <A_BB/A_TT> for M_S>4 : 0.369 +- 0.144 (paper 0.34)
+  <r_TE>     for M_S>4 : 0.044 +- 0.145 (Planck 0.355)
+  r_TB > 0 : 7/21 runs (2/6 for M_S>4);  paper 14/21 (8/9);  mean |r_TB| = 0.064
+  r_EB > 0 : 11/21 runs (2/6 for M_S>4);  paper 14/21 (9/9);  mean |r_EB| = 0.047

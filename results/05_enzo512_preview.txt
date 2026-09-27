@@ -1,0 +1,50 @@
+=== preview of /n/netscratch/protopapas_lab/Everyone/lgomez/mhd/enzo_box/ms4.7_ma1.5_n512_s100001   (Mon Sep 21 10:43:33 EDT 2026)
+    t_dyn = 0.10638297872340426 code units, N = 512
+
+################ 1. dumps
+  dump      t/t_dyn    cycle   cycles per t_dyn since previous
+  DD0000      0.000        0                                  
+  DD0001      1.000     3458                             3,458
+  DD0002      2.000    51130                            47,672
+  DD0003      2.127    59286                            64,051
+  DD0004      2.127    59287                                  
+  DD0005      2.127    59288                                  
+  DD0006      2.437   100000                           131,684
+  (dumps a few cycles apart at the end are restart points written when a segment stops)
+
+################ 2. time step history (enzo.log)
+       t/t_dyn   cycles   median dt     min dt  max signal speed
+   0.00- 0.25      983   2.720e-05  3.121e-06              28.7
+   0.25- 0.50      636   4.194e-05  3.823e-05              18.6
+   0.50- 0.75      721   3.836e-05  1.906e-05              20.4
+   0.75- 1.00     1119   2.344e-05  2.656e-06              33.3
+   1.00- 1.25     3321   7.192e-06  2.687e-06             108.6
+   1.25- 1.50     7836   3.164e-06  1.050e-06             246.9
+   1.50- 1.75     9865   2.650e-06  1.316e-06             294.8
+   1.75- 2.00    26651   8.703e-07  2.436e-07             897.7
+   2.00- 2.25    15811   1.667e-06  9.199e-07             468.7
+   2.25- 2.50    33057   3.404e-07  3.827e-08            2295.4
+
+  for scale: v_rms ~ M_S c_s ~ 5, fast speed of the mean field ~ 4.
+  A signal speed far above that comes from a few very-low-density cells where
+  the Alfven speed B/sqrt(rho) is huge: they set the step for the whole box.
+
+################ 3. dust statistics per dump (t >= 2 t_dyn)
+  DD0002 t=0.2128 ( 2.00 tdyn) -> snap_0000  Ms=5.335 Ma=1.539 cs=1.0121 <Bx>=3.5093 <By>=+2.7e-09 <Bz>=-1.5e-10
+      axis check: |div B| rel = 1.42e-02 as mapped, 8.70e-01 if reversed
+  DD0003: t=0.2263 (2.127 t_dyn) is off the dump cadence -- restart dump, skipped
+  DD0004: t=0.2263 (2.127 t_dyn) is off the dump cadence -- restart dump, skipped
+  DD0005: t=0.2263 (2.127 t_dyn) is off the dump cadence -- restart dump, skipped
+  DD0006: t=0.2592 (2.437 t_dyn) is off the dump cadence -- restart dump, skipped
+1 snapshots written to /n/netscratch/protopapas_lab/Everyone/lgomez/mhd/enzo_box/ms4.7_ma1.5_n512_s100001/preview/all
+--- snap_0000  (t = 2.00 t_dyn)
+snap_0000: Ms=5.33 Ma=1.54 window=[3,26] aEE=-2.10 aBB=-2.45 B/E=2.00 rTE=0.16
+    (paper at M_S>4: BB/EE 0.55, r_TE ~0.3; Planck: 0.53, 0.355;
+     our solver at 512^3: BB/EE 0.90, r_TE 0.47)
+
+--- dust maps of every converted dump (16 tiles each; maps.png = newest)
+  snap_0000:
+  BB/EE over tiles: median 0.550, 16-84% [0.466, 0.970]   (Planck ~0.53)
+  quick look: /n/netscratch/protopapas_lab/Everyone/lgomez/mhd/enzo_box/ms4.7_ma1.5_n512_s100001/preview/maps.png
+
+=== done Mon Sep 21 10:45:41 EDT 2026

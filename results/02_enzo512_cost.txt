@@ -1,0 +1,24 @@
+Enzo 512^3 at the paper's Planck point (M_S 4.7, M_A 1.5), FASRC sapphire,
+112 cores (one node), cluster/enzo_box.slurm.  Measured, not estimated.
+
+parallel efficiency   2.80e5 cell-updates per core per second (3.13e7 total),
+                      61.8% of wall time in the MHD solver, load imbalance 1.04
+                      scaling at 128^3: 4.36e5 (1 core), 3.83e5 (8), 3.13e5 (28),
+                      2.92e5 (56), 2.21e5 (112) cell-updates/core/s
+
+segment 1 (job 46364783)  70.5 h wall, 7,897 core-hours, 59,288 cycles
+                          reached t = 2.13 t_dyn of the 10 requested (21%)
+segment 2 (job 46813670)  ~70 h wall, reached t = 2.44 t_dyn
+
+time step collapse (this is why it stalled)
+  cycles per t_dyn:  3,458 (0->1)   47,672 (1->2)   64,051 (2->2.13)
+                     131,684 by t = 2.44
+  fastest signal speed in the box: 29 -> 2,295 while the gas moves at ~5
+  cause: a few cells emptied to rho ~ 1e-6 of the mean; their Alfven speed
+  B/sqrt(rho) sets the time step for the entire box.  Those cells carry ~1e-6
+  of the mass and nothing of the dust emission.
+
+projected cost to finish 10 t_dyn without a limiter: 40,000-70,000 core-hours
+and weeks of queue at FairShare 0.  Run cancelled at 2.44 t_dyn.
+with the Alfven limiter (see 06): ~8,000 cycles per t_dyn -> ~4 days, ~10,000
+core-hours.  At 256^3: ~4,000 cycles per t_dyn -> ~8 h, ~900 core-hours.

@@ -1,0 +1,33 @@
+
+=== projection perpendicular to B0 (the paper's case),  N=32,  fit window k=[3,5],  snapshots: mhd 11, enzo 11
+  quantity        our solver          Enzo diff/sigma  paper fit   (paper Table-1 fit evaluated at Enzo's M_S, M_A)
+  M_S            4.184±0.21    5.298±0.26        -3.3           
+  M_A            1.335±nan     1.886±nan          nan           
+  alpha_rho     -3.440±0.45   -2.897±0.29        -1.0      -2.76
+  alpha_v       -4.593±0.39   -4.583±0.33        -0.0      -3.49
+  alpha_H       -4.427±0.51   -4.186±0.47        -0.3      -3.73
+  alpha_TT      -3.513±0.61   -3.055±0.55        -0.6      -2.70
+  alpha_EE      -3.135±0.63   -2.681±0.56        -0.5      -2.20
+  alpha_BB      -2.970±0.68   -2.458±0.53        -0.6      -2.13
+  BB/EE band     1.166±0.40    0.890±0.26         0.6           
+  EE/TT band     0.378±0.07    0.419±0.16        -0.2           
+  r_TE           0.053±0.16    0.191±0.13        -0.7           
+  r_TB          -0.020±0.29   -0.007±0.14        -0.0           
+  r_EB          -0.061±0.16   -0.049±0.06        -0.1           
+  Planck: alpha_EE -2.42, alpha_BB -2.54, BB/EE 0.53, r_TE 0.355
+
+=== projection along B0,  N=32,  fit window k=[3,5],  snapshots: mhd 11, enzo 11
+  quantity        our solver          Enzo diff/sigma  paper fit   (paper Table-1 fit evaluated at Enzo's M_S, M_A)
+  M_S            4.184±0.21    5.298±0.26        -3.3           
+  M_A            1.335±nan     1.886±nan          nan           
+  alpha_rho     -3.440±0.45   -2.897±0.29        -1.0      -2.76
+  alpha_v       -4.593±0.39   -4.583±0.33        -0.0      -3.49
+  alpha_H       -4.427±0.51   -4.186±0.47        -0.3      -3.73
+  alpha_TT      -3.696±0.63   -3.069±0.55        -0.8      -2.70
+  alpha_EE      -2.782±0.69   -2.091±0.73        -0.7      -2.20
+  alpha_BB      -2.935±0.56   -2.507±0.55        -0.5      -2.13
+  BB/EE band     0.967±0.38    0.997±0.23        -0.1           
+  EE/TT band     0.182±0.13    0.149±0.05         0.2           
+  r_TE           0.077±0.24    0.227±0.20        -0.5           
+  r_TB           0.068±0.22    0.020±0.17         0.2           
+  r_EB           0.007±0.11   -0.010±0.14         0.1           

@@ -1,0 +1,47 @@
+Our own solver (src/mhd.c): 21 (M_S, M_A) runs at each resolution, line of sight
+perpendicular to the mean field.  Produced on the FASRC cluster by
+cluster/run_suite.slurm + cluster/solver_extract.slurm (job 46411713, 2026-09-14)
+and copied here from its report.
+
+Resolution dependence of the Table-1 coefficients (alpha_q = a + b M_S + c M_A)
+
+  quantity  coef |  N=128   N=256   N=512    paper
+  ------------------------------------------------
+  alpha_rho    a |   -3.453   -3.366   -3.324    -3.610
+               b |    0.168    0.127    0.113     0.160
+               c |    0.039    0.015   -0.039    -0.000
+
+  alpha_v      a |   -3.702   -3.520   -3.410    -3.860
+               b |   -0.007    0.001    0.017     0.020
+               c |    0.101    0.040   -0.040     0.140
+
+  alpha_H      a |   -3.224   -3.076   -2.959    -3.310
+               b |   -0.011   -0.017   -0.023     0.020
+               c |   -0.086   -0.173   -0.305    -0.280
+
+  alpha_TT     a |   -3.968   -3.685   -3.504    -3.660
+               b |    0.211    0.144    0.106     0.150
+               c |    0.191    0.131    0.054     0.090
+
+  alpha_EE     a |   -3.899   -3.576   -3.478    -3.630
+               b |    0.226    0.148    0.132     0.170
+               c |    0.315    0.283    0.192     0.280
+
+  alpha_BB     a |   -4.841   -4.685   -4.642    -4.820
+               b |    0.317    0.230    0.196     0.280
+               c |    0.570    0.616    0.566     0.640
+
+  <BB/EE> M_S>4  |    0.963    0.840    0.895     0.550
+  <r_TE>  M_S>4  |    0.264    0.413    0.465     0.300
+  fit window     |  [3,6]    [3,13]   [3,26]    [4,25]
+
+Inferred Planck point from alpha_EE = -2.42 and alpha_BB = -2.54:
+  N=256: M_S = 4.0, M_A = 2.0      N=512: M_S = 5.3, M_A = 1.9   (paper: 4.7, 1.5)
+
+Other measurements from the same suite (cluster reports):
+  line-of-sight depth (128^3, M_S>4): BB/EE and r_TE unchanged from full box down
+    to 6% of it; polarization fraction rises 0.61 -> 0.90, alpha_EE -2.45 -> -2.39
+  snapshot decorrelation (128^3): k>=3 independent after ~0.5 t_dyn, k=1-2 after
+    ~2 t_dyn -> snapshots every 2 t_dyn are independent training samples
+  polarization-angle spread depends on M_A only: ~1 deg at M_A 0.5, ~7 deg at
+    M_A 1, 25-45 deg at M_A 2

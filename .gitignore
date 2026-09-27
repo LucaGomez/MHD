@@ -1,0 +1,20 @@
+# simulation output and analysis intermediates: every script regenerates them
+runs/
+runs_well/
+runs_enzo/
+runs_xcheck/
+pysm_patches/
+ic_n128/
+slurm_logs/
+Enzo_Build/
+enzo_preview/*.npz
+
+# build products
+src/mhd
+*.o
+__pycache__/
+*.pyc
+
+# papers (not ours to redistribute)
+*.pdf
+Enzo_Build
