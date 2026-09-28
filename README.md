@@ -383,3 +383,10 @@ more than producing more boxes.
 - Planck dust values quoted from Planck 2018 XI and XII.
 
 Cluster work ran on the FASRC Cannon cluster (Harvard).
+
+## 9. License
+
+MIT (see [LICENSE](LICENSE)) for the code in this repository. The data it
+analyses keep their own terms: The Well / CATS boxes are CC BY 4.0 and must be
+cited as Burkhart et al. 2020; PySM3 and Enzo are separately licensed by their
+authors.
