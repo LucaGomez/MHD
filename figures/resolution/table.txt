@@ -2,45 +2,57 @@
    local slope measured against its median over k = 4-10; k_diss = first k where it has steepened by more than 0.25
 
    run              M_S   M_A     density  k_diss    velocity  k_diss   magnetic   k_diss
-   Ma_0.7_Ms_7     8.36  0.84       -2.24      12       -3.79      11       -3.29      11
-   Ma_2_Ms_7       8.13  8.12       -2.43      12       -4.03      17       -2.98      11
-   Ma_0.7_Ms_2     2.53  0.80       -2.82      11       -3.80      12       -3.36      11
-   Ma_2_Ms_2       2.51  8.34       -2.90      13       -3.94      17       -2.88      11
+   Ma_0.7_Ms_7     8.36  0.84       -2.24       9       -3.79      11       -3.29      11
+   Ma_2_Ms_7       8.13  8.12       -2.43       9       -4.03      17       -2.98       9
+   Ma_0.7_Ms_2     2.53  0.80       -2.82       9       -3.80      12       -3.36      11
+   Ma_2_Ms_2       2.51  8.34       -2.90       8       -3.94       5       -2.88       9
 
-   median k_diss = 12: a 256^3 box is trustworthy over k = 3-12, a factor 3.8 in scale
-   (the same criterion on a 512^3 box gives k_diss ~ 23: twice the range, eight times the cost per snapshot)
+   median k_diss = 9.0: a 256^3 box is physical over k = 3-9.0, a factor 3.0 in scale
+
+   sensitivity of that median to the criterion (reference window, tolerance):
+      reference k 3-8: tol 0.15 ->   7.0   tol 0.25 ->   8.0   tol 0.40 ->   9.0   
+      reference k 4-10: tol 0.15 ->   9.0   tol 0.25 ->   9.0   tol 0.40 ->  12.0   
+      reference k 5-12: tol 0.15 ->   9.5   tol 0.25 ->  12.0   tol 0.40 ->  14.0   
+
+   a 512^3 box of the same code would reach k_diss ~ 18 if the knee scales with resolution.
+   That is an extrapolation, not a measurement: no 512^3 spectra were analysed here.  The ladder below tests the scaling where data exist.
+
+   measured knee against resolution (our own solver, analysis_ax2.npz):
+      suite                   runs     N   k_diss (median)    k_diss/N
+      n64                        7    64               8.0       0.125
+      n128                       7   128               9.0       0.070
 
 2. DOES A 128^2 MAP KEEP THE STATISTICS OF THE 256^2 FACE?
-   band k = [3, 12] in units of the map side; 'face 256' is the native projected face,
-   'face 128' the same face 2x2-binned, 'tile 128' a native-resolution quarter (its band is box k 1.5-6)
+   band k = [3, 9] in units of the map side; 'face 256' is the native projected face,
+   'face 128' the same face 2x2-binned, 'tile 128' a native-resolution quarter, half the box width, so its band is box k 6-18 -- past the knee)
 
    run           product          aTT       aEE       aBB      bbee       rte     p_med     S_med
-   Ma_0.7_Ms_7   face 256       -2.19     -2.02     -2.28      1.25      0.02      0.75      1.77
-                 face 128       -2.21     -2.03     -2.30      1.25      0.02      0.75      3.21
-                 tile 128       -2.65     -2.53     -2.51      0.98      0.06      0.75      1.82
-   Ma_2_Ms_7     face 256       -2.37     -2.08     -2.40      0.95      0.26      0.19      9.67
-                 face 128       -2.39     -2.10     -2.42      0.95      0.26      0.18     16.32
-                 tile 128       -2.82     -2.31     -2.49      0.91      0.25      0.19      9.76
-   Ma_0.7_Ms_2   face 256       -2.76     -2.64     -2.82      1.09     -0.01      0.73      1.02
-                 face 128       -2.77     -2.65     -2.84      1.09     -0.01      0.73      1.94
-                 tile 128       -3.68     -3.37     -3.51      0.99      0.09      0.73      1.00
-   Ma_2_Ms_2     face 256       -3.11     -2.41     -2.91      1.16      0.35      0.16      8.00
-                 face 128       -3.13     -2.43     -2.92      1.16      0.35      0.16     13.38
-                 tile 128       -3.45     -2.80     -2.95      0.81      0.26      0.17      7.97
+   Ma_0.7_Ms_7   face 256       -2.04     -1.91     -2.34      1.17      0.08      0.75      1.77
+                 face 128       -2.06     -1.92     -2.35      1.17      0.08      0.75      3.21
+                 tile 128       -2.52     -2.46     -2.37      0.92      0.12      0.75      1.82
+   Ma_2_Ms_7     face 256       -2.30     -1.89     -2.55      0.96      0.51      0.19      9.67
+                 face 128       -2.31     -1.90     -2.56      0.96      0.51      0.18     16.32
+                 tile 128       -2.72     -2.23     -2.38      0.64      0.40      0.19      9.76
+   Ma_0.7_Ms_2   face 256       -2.58     -2.31     -3.08      1.25      0.21      0.73      1.02
+                 face 128       -2.59     -2.32     -3.09      1.25      0.21      0.73      1.94
+                 tile 128       -3.58     -3.20     -3.40      0.83      0.39      0.73      1.00
+   Ma_2_Ms_2     face 256       -3.04     -2.26     -3.17      0.97      0.55      0.16      8.00
+                 face 128       -3.05     -2.27     -3.19      0.97      0.55      0.16     13.38
+                 tile 128       -3.39     -2.68     -2.99      0.65      0.44      0.17      7.97
 
    medians over all runs and snapshots:
-                 face 256       -2.59     -2.25     -2.61      1.10      0.10      0.45      4.26
-                 face 128       -2.60     -2.26     -2.63      1.10      0.09      0.45      7.00
-                 tile 128       -3.13     -2.70     -2.79      0.92      0.14      0.43      4.04
+                 face 256       -2.52     -2.09     -2.71      1.08      0.36      0.45      4.26
+                 face 128       -2.54     -2.10     -2.73      1.07      0.36      0.45      7.00
+                 tile 128       -2.99     -2.62     -2.78      0.77      0.35      0.43      4.04
 
    binning 256 -> 128 pixels changes the statistics by at most 2.74 (S_med); the slopes by 0.02
 
 3. THE SAME BAND ON THE SKY
-   a 128^2 map covering THETA degrees carries k = 3-12 at these multipoles
+   a 128^2 map covering THETA degrees carries k = 3-9 at these multipoles
       THETA    ell(k=3)   ell(k_diss)     pixel
-       20 deg          54           207      9.4'
-       10 deg         108           414      4.7'
-        5 deg         216           828      2.3'
+       20 deg          54           162      9.4'
+       10 deg         108           324      4.7'
+        5 deg         216           648      2.3'
 
    Planck measures dust over ell ~ 40-600 (Planck 2018 XI); our PySM3 patch comparison
    used 20 deg maps, i.e. ell = 54-234 for this band.

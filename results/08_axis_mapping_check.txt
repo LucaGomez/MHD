@@ -1,0 +1,30 @@
+Axis-mapping check on The Well's cubes (python/well_stream.py, divb_check).
+
+|div B| computed with the arrays taken as (x, y, z), divided by the same
+quantity with x and z exchanged.  A correct mapping gives a ratio well below
+1; a wrong one would give ~1 or above.  One value per streamed trajectory:
+
+  Ma_0.7_Ms_0.5    test   0.033
+  Ma_0.7_Ms_0.5    valid  0.038
+  Ma_0.7_Ms_0.7    test   0.041
+  Ma_0.7_Ms_0.7    valid  0.040
+  Ma_0.7_Ms_1.5    test   0.051
+  Ma_0.7_Ms_1.5    valid  0.051
+  Ma_0.7_Ms_2      test   0.055
+  Ma_0.7_Ms_2      valid  0.058
+  Ma_0.7_Ms_7      test   0.065
+  Ma_0.7_Ms_7      valid  0.064
+  Ma_2_Ms_0.5      test   0.046
+  Ma_2_Ms_0.5      valid  0.046
+  Ma_2_Ms_0.7      test   0.053
+  Ma_2_Ms_0.7      valid  0.057
+  Ma_2_Ms_1.5      test   0.074
+  Ma_2_Ms_1.5      valid  0.077
+  Ma_2_Ms_2        test   0.093
+  Ma_2_Ms_2        valid  0.092
+  Ma_2_Ms_7        test   0.109
+  Ma_2_Ms_7        valid  0.107
+
+20 trajectories, ratio 0.033 to 0.109 (median 0.056).
+The mapping used throughout is therefore the one that makes the field
+solenoidal, which is the only assignment consistent with the data.

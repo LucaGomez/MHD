@@ -10,8 +10,10 @@ MHD (The Well state files from well_stream.py), line of sight perpendicular to
 the mean field (both such axes), two ways of making a 128^2 map:
   face  the whole 256^2 projected face, 2x2-binned: the patch spans the box,
         so patch k = box k and the fit band k=[3,13] is the box's inertial range
-  tile  the 256^2 face cut into 4 native-resolution 128^2 tiles: patch k 3-13
-        is box k 1.5-6.5, i.e. driving scales and the start of the cascade
+  tile  the 256^2 face cut into 4 native-resolution 128^2 tiles.  A half-width
+        tile resolves a given patch k at TWICE the box wavenumber, so patch
+        k 3-13 is box k 6-26: the upper half of that lies beyond the box's
+        dissipation knee (k ~ 12), which is why tiles measure steeper slopes
 In both, the map is smoothed with the same 2-pixel beam, E/B are decomposed on
 the full periodic face, and the patch is then tapered exactly like PySM.
 
@@ -23,6 +25,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from analysis import qu_to_eb
 from patch_stats import patch_stats, KEYS
+from well_stream import state_map
 
 PLANCK = dict(aEE=-2.42, aBB=-2.54, bbee=0.53, rte=0.36)     # Planck 2018 XI, ell 40-600
 # colour follows the source, never the position; the native-resolution "tile"
@@ -55,9 +58,10 @@ def bin2(a):
 def mhd_stats(pair_dir, product, kmin, kmax, fwhm_px=2.0):
     out = []
     for f in sorted(glob.glob(os.path.join(pair_dir, "state_*.npz"))):
-        z = np.load(f)
+        z = np.load(f, allow_pickle=True)
+        meta = json.loads(str(z["meta"]))
         for ax in (1, 2):
-            T, Q, U = (z[f"ax{ax}_map{m}"].astype(np.float64) for m in "TQU")
+            T, Q, U = (state_map(z, meta, ax, m) for m in "TQU")
             if product == "face":
                 T, Q, U = bin2(T), bin2(Q), bin2(U)
             T, Q, U = (smooth_periodic(x, fwhm_px) for x in (T, Q, U))
@@ -82,19 +86,42 @@ def pysm_stats(path, kmin, kmax):
                         E=z["E"][i], B=z["B"][i], beam_sigma=bs) for i in range(len(z["T"]))], z
 
 
-def enzo_series(path, kmin, kmax, fwhm_px=2.0):
-    """Tiles written by extract_maps.py: E/B already decomposed on the full
-    periodic face, then cut, so only the taper and the common beam are applied."""
+def untile(a, t):
+    """Reassemble the t x t tiles written by extract_maps.py into the full face
+    (they are stored row-major: index i*t + j covers rows i, columns j)."""
+    m = a.shape[-1]
+    return np.block([[a[i * t + j] for j in range(t)] for i in range(t)])
+
+
+def enzo_series(path, kmin, kmax, fwhm_px=2.0, product="face"):
+    """Maps written by extract_maps.py, with E/B already decomposed on the full
+    periodic face before tiling.
+
+    product 'face': the tiles are reassembled into the whole face and binned to
+    128^2, so patch k = box k and the fit band sits inside the cascade -- the
+    like-for-like counterpart of the Well 'face' product.
+    product 'tile': the native-resolution tiles as written; their patch k is
+    box k / (map size / box size), i.e. four times higher for 128 of 512, which
+    is past the dissipation knee.  Kept only to show that difference.
+    """
     z = np.load(path, allow_pickle=True)
     meta = json.loads(str(z["meta"]))
-    bsig = (fwhm_px / 2.3548) / z["T"].shape[-1]
-    st = []
-    for i in range(len(z["T"])):
-        T, Q, U, E, B = (smooth_periodic(z[k][i].astype(np.float64), fwhm_px)
-                         for k in ("T", "Q", "U", "E", "B"))
+    t = int(round(np.sqrt(len(z["T"]))))
+    st, maps = [], {k: z[k] for k in ("T", "Q", "U", "E", "B")}
+    if product == "face":
+        full = {k: untile(v, t) for k, v in maps.items()}
+        while full["T"].shape[0] > 128:
+            full = {k: bin2(v.astype(np.float64)) for k, v in full.items()}
+        items = [tuple(full[k] for k in ("T", "Q", "U", "E", "B"))]
+    else:
+        items = [tuple(maps[k][i].astype(np.float64) for k in ("T", "Q", "U", "E", "B"))
+                 for i in range(len(maps["T"]))]
+    for T, Q, U, E, B in items:
+        bsig = (fwhm_px / 2.3548) / T.shape[-1]
+        T, Q, U, E, B = (smooth_periodic(x, fwhm_px) for x in (T, Q, U, E, B))
         st.append(patch_stats(T, Q, U, kmin=kmin, kmax=kmax, E=E, B=B, beam_sigma=bsig))
     name = (f"{meta.get('code', 'sim')} Ms{meta['Ms']:.1f} Ma{meta['Ma']:.1f} "
-            f"tile({z['T'].shape[-1]}/{meta['n_box']})")
+            f"{product}({items[0][0].shape[0]}/{meta['n_box']})")
     return name, st
 
 
@@ -134,7 +161,8 @@ def main():
 
     for f in a.enzo:
         if os.path.exists(f):
-            series.append(enzo_series(f, a.kmin, a.kmax))
+            for prod in ("face", "tile"):
+                series.append(enzo_series(f, a.kmin, a.kmax, product=prod))
 
     # ---- table
     lines = [f"Statistics over patch k = [{a.kmin:g}, {a.kmax:g}] (20 deg patch: ell ~ "

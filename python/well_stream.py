@@ -71,6 +71,18 @@ def save_state(path, snap, meta):
     os.replace(tmp, path)
 
 
+def state_map(z, meta, ax, name):
+    """A stored T/Q/U/E/B map, in the frame analysis.project now returns.
+
+    States written before the axis=1 frame fix (Codex review round 1, F01) hold
+    the axis=1 maps transposed; they are corrected here so cached states stay
+    usable.  New states carry maps_frame_fixed and are returned as written."""
+    a = z[f"ax{ax}_map{name}"].astype(np.float64)
+    if ax == 1 and not meta.get("maps_frame_fixed"):
+        a = a.T
+    return a
+
+
 def load_state(path, ax):
     z = np.load(path)
     meta = json.loads(str(z["meta"]))
@@ -78,7 +90,7 @@ def load_state(path, ax):
     r["n"] = int(r["n"])
     for k in ("Ms", "Ma", "sigma_lnrho"):
         r[k] = float(r[k])
-    r["maps"] = {m: z[f"ax{ax}_map{m}"] for m in ("T", "Q", "U", "E", "B")}
+    r["maps"] = {m: state_map(z, meta, ax, m) for m in ("T", "Q", "U", "E", "B")}
     r["meta"] = meta
     # c_s was chosen when the state was written; if the pressure list has since
     # been extended, rescale M_S (v and B were divided by c_s, so M_A and the
@@ -104,6 +116,7 @@ def stream(pair, splits, steps, trajs, outdir):
                     todo.append((tr, st, path))
         if not todo:
             continue
+        cs_run = None            # c_s is a property of the run, not of a snapshot
         with fsspec.open(url, "rb", block_size=64 * 2**20) as fh, h5py.File(fh, "r") as f:
             ntraj = f["t0_fields/density"].shape[0]
             for tr, st, path in todo:
@@ -115,13 +128,17 @@ def stream(pair, splits, steps, trajs, outdir):
                 v = np.ascontiguousarray(np.moveaxis(f["t1_fields/velocity"][tr, st], -1, 0))
                 tread = time.time() - t0
                 cs, vmean = pick_cs(v, label_ms)
+                # fix it from the first snapshot of the run and keep it: an
+                # isothermal run has one sound speed (Codex review round 1, F08)
+                cs = cs_run = cs if cs_run is None else cs_run
                 v /= cs; B /= cs
                 meta = dict(pair=pair, split=split, traj=tr, step=st, cs=1.0, cs_code=cs,
                             p_code=cs**2, vmean_code=vmean, label_ms=label_ms,
                             label_ma=float(pair.split("_")[1]),
                             time=float(f["dimensions/time"][st]),
                             B0=[float(x) for x in B.mean(axis=(1, 2, 3))],
-                            divb_ratio=float(divb_check(B)) if st == steps[0] else None)
+                            divb_ratio=float(divb_check(B)) if st == steps[0] else None,
+                            maps_frame_fixed=True)
                 snap = dict(rho=rho, v=v, H=B, meta=meta, n=rho.shape[0])
                 save_state(path, snap, meta)
                 r = load_state(path, 2)

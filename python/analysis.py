@@ -98,7 +98,12 @@ def project(rho, H, axis=2, pol_perp=True):
     """Stokes maps for optically thin dust, Eqs. (4),(7),(8).
 
     axis is the line of sight; the two remaining axes are (horizontal,
-    vertical) on the sky, in cyclic order.
+    vertical) on the sky, in cyclic order.  Summing over `axis` leaves the
+    remaining axes in increasing order, which for axis = 1 is (x, z) while the
+    cyclic sky frame is (h, v) = (z, x): the maps are transposed in that case so
+    that array axis 0 is always the horizontal sky axis.  Without it Q is
+    defined against one frame and the E/B transform against another, which
+    mixes E and B (found by Codex review round 1, finding F01).
 
     Grains align with their long axis perpendicular to H, so the emitted
     polarization direction is perpendicular to the sky-projected field:
@@ -116,6 +121,8 @@ def project(rho, H, axis=2, pol_perp=True):
     T = rho.sum(axis=axis, dtype=np.float64)
     Q = sgn * (rho * (Hh**2 - Hv**2) / H2).sum(axis=axis, dtype=np.float64)
     U = sgn * (rho * (2.0 * Hh * Hv) / H2).sum(axis=axis, dtype=np.float64)
+    if ih > iv:                       # axis = 1: array order (x, z), frame (z, x)
+        T, Q, U = T.T, Q.T, U.T
     return T, Q, U
 
 
