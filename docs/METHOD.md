@@ -12,6 +12,13 @@
   isothermal MHD (Mignone 2007 - the solver reference the paper cites), and
   Dedner et al. (2002) mixed hyperbolic/parabolic divergence cleaning.  Time
   integration is SSP-RK2 at CFL 0.4 with an unsplit (method-of-lines) update.
+* **Density statistics.**  For isothermal turbulence the logarithmic density
+  variance follows the Blunted-Vato relation, sigma^2(ln rho) = ln(1 + b^2 M_S^2),
+  with the forcing parameter b = 1 for the purely solenoidal driving used here
+  (b falls to 1/3 only when the driving is compressive).  At M_S = 4.7 that
+  predicts sigma(ln rho) = 1.55, and the runs reproduce it: `results/06` gives
+  1.31 +- 0.05 without the limiter and 1.34 +- 0.09 with it.
+
 * **Driving.** Stochastic Ornstein-Uhlenbeck acceleration on the 32 Fourier
   modes with 1 <= |k|/k_min <= 2, correlation time t_dyn = L_0/v_rms with
   L_0 = L/2, Helmholtz projection P_ij = zeta d_ij + (1-2 zeta) k_i k_j / k^2
