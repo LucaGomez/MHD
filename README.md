@@ -150,11 +150,11 @@ Side-by-side maps (PySM3 d10 vs a simulated face):
 
 <img src="figures/extra/enzo_fernandez.jpg" alt="Enzo Fernández, hands on his head" width="330" align="right">
 
-Enzo, the code used here, is an adaptive-mesh astrophysics code (Bryan et al. 2014).
-The other Enzo, pictured, had just scored against England. This section is about
-the week when the code named after him advanced 0.3 dynamical times in six days,
-so the celebration is borrowed: it belongs to the moment the Alfvén-speed limiter
-finally made the time step stand still, further down the page.
+Enzo, the adaptive-mesh astrophysics code used here (Bryan et al. 2014), is named
+after Enzo Fernández, pictured, who wrote its stochastic forcing module before
+leaving research for football. He had just scored against England when this photo
+was taken; the celebration is borrowed here for the moment, further down the page,
+when the Alfvén-speed limiter finally made the time step stand still.
 
 We ran Enzo at 512³ at the paper's Planck point (M_S 4.7, M_A 1.5) on one
 112-core node. Parallel efficiency was fine (2.8×10⁵ cell-updates per core per
@@ -181,10 +181,7 @@ core-hours and weeks of queue at FairShare 0.
 
 **The fix:** Enzo's Alfvén-speed limiter (`UseFloor = 1`,
 `MaximumAlvenSpeed = 50`) raises the density of exactly those cells until their
-signal speed is at the cap. The fast magnetosonic speed c_f² = v_A² + c_s² that
-sets the Courant condition is evaluated before the floor is applied, so the
-limiter changes the density field without changing c_f; the speed-up comes
-entirely from the cells that stop failing the positivity check. Stock Enzo prints one line per capped cell per step,
+signal speed is at the cap. Stock Enzo prints one line per capped cell per step,
 which at 256³ means gigabytes of log, so `cluster/patch_enzo_floor.sh` silences
 that message and rebuilds.
 
@@ -238,10 +235,6 @@ if the knee did scale with resolution, but that is an extrapolation, not a
 measurement.
 
 ![resolution](figures/report/fig_resolution.png)
-
-The polarization-angle dispersion S is a ratio of angle differences, so it is
-scale-free: a 2-pixel lag measures the same S on maps of any pixel size, which is
-what makes the S column of §2.2 comparable across products.
 
 **(b) Does a 128×128 map keep the statistics?** Binning the 256² projected face
 to 128² changes the spectral slopes by **0.02** and BB/EE, r_TE and the
