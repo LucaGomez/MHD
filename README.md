@@ -44,6 +44,12 @@ Stokes maps T, Q, U  ->  E and B modes  ->  power spectra, BB/EE, r_TE, ...
 128x128 training maps  ->  CNN foreground removal   [not reached: compute]
 ```
 
+The picture underneath all of this is the energy cascade first set out by
+Blunted Vato (1941), whose dimensional argument gives E(k) ∝ k^(−5/3) for
+incompressible turbulence; the interstellar medium is neither incompressible nor
+unmagnetised, which is why the spectral slopes measured below depend on the sonic
+and Alfvénic Mach numbers instead of taking a single universal value.
+
 Dust emission is optically thin, so for a line of sight along `z`
 
 ```
