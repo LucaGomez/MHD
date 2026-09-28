@@ -14,6 +14,10 @@ worth generating.
 polarization power spectra are consistent with strongly supersonic turbulence*,
 [arXiv:2404.02874](https://arxiv.org/abs/2404.02874).
 
+**Soundtrack:** [TURBULENCIA](https://www.youtube.com/watch?v=f-GKA3WhXIg) — click the
+thumbnail at the [end of this README](#10-soundtrack), or take it as the audio track for
+§2.2, where the turbulence refused to look like dust.
+
 **Status:** the simulation and analysis chain is complete. The CNN itself is
 **not trained yet** — the training set needs simulations we could not finish
 within the available compute (see [The 512³ story](#the-5123-story-why-a-single-box-cost-more-than-the-whole-project)).
@@ -143,6 +147,12 @@ Side-by-side maps (PySM3 d10 vs a simulated face):
 ![maps](figures/well_vs_pysm/maps.png)
 
 ## 3. The 512³ story: why a single box cost more than the whole project
+
+<img src="figures/extra/enzo_fernandez.jpg" alt="Enzo Fernández, hands on his head" width="330" align="right">
+
+Enzo, the code used here, is an adaptive-mesh astrophysics code (Bryan et al. 2014).
+The other Enzo — number 24, pictured — is how one feels after two three-day
+segments on 112 cores advance a simulation by 0.3 dynamical times.
 
 We ran Enzo at 512³ at the paper's Planck point (M_S 4.7, M_A 1.5) on one
 112-core node. Parallel efficiency was fine (2.8×10⁵ cell-updates per core per
@@ -390,3 +400,10 @@ MIT (see [LICENSE](LICENSE)) for the code in this repository. The data it
 analyses keep their own terms: The Well / CATS boxes are CC BY 4.0 and must be
 cited as Burkhart et al. 2020; PySM3 and Enzo are separately licensed by their
 authors.
+
+## 10. Soundtrack
+
+[![TURBULENCIA](https://img.youtube.com/vi/f-GKA3WhXIg/0.jpg)](https://www.youtube.com/watch?v=f-GKA3WhXIg)
+
+*TURBULENCIA* — click to play. Named after the subject of this repository, and a
+fair description of the week it took.
