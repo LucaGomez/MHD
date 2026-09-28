@@ -98,6 +98,42 @@ def fig_cost(plt, root, out, ms=4.7):
     return out
 
 
+def fig_dust_summary(plt, summary_json, out):
+    """Compact print version of the comparison: median and 16-84% range for the
+    four statistics that carry the conclusion, dust models against simulations."""
+    import json
+    d = json.load(open(summary_json))
+    names = [n for n in d if n.startswith("PySM")] + \
+            [n for n in d if not n.startswith("PySM") and "face" in n]
+    short = {n: n.replace("PySM ", "PySM3 ").replace(" face", "")
+              .replace("enzo ", "Enzo ").replace("face(128/512)", "").strip() for n in names}
+    panels = [("aEE", r"$\alpha_{EE}$", -2.42), ("bbee", "BB/EE", 0.53),
+              ("rte", r"$r_{TE}$", 0.36), ("S_med", r"$S$ at 2 px [deg]", None)]
+    fig, axs = plt.subplots(1, 4, figsize=(11, 3.7), sharey=True)
+    y = np.arange(len(names))[::-1]
+    for ax, (key, lab, planck) in zip(axs, panels):
+        for yy, n in zip(y, names):
+            lo, md, hi = d[n][key]
+            col = C[0] if n.startswith("PySM") else (C[2] if n.startswith("enzo") else C[3])
+            ax.plot([lo, hi], [yy, yy], color=col, lw=2.4, solid_capstyle="round", alpha=.55)
+            ax.plot([md], [yy], "o", color=col, ms=6.5, zorder=3)
+        if planck is not None:
+            ax.axvline(planck, color=MUTED, lw=1, ls="--")
+            ax.annotate("Planck", xy=(planck, 1), xycoords=("data", "axes fraction"),
+                        xytext=(3, -11), textcoords="offset points",
+                        color=MUTED, fontsize=8)
+        ax.set_title(lab, fontsize=11, color=INK, loc="left")
+        ax.grid(axis="x", color=GRID, lw=0.6); ax.set_axisbelow(True)
+        for sp in ("top", "right", "left"):
+            ax.spines[sp].set_visible(False)
+    axs[0].set_yticks(y); axs[0].set_yticklabels([short[n] for n in names], fontsize=9, color=INK)
+    fig.suptitle("Dust models (blue) against simulated maps: median and 16-84% range "
+                 "over maps", fontsize=10, color=INK, x=0.01, ha="left")
+    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    fig.savefig(out, dpi=150); plt.close(fig)
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -111,6 +147,9 @@ def main():
     plt = style()
     print(fig_resolution(plt, a.well, a.pair, os.path.join(a.out, "fig_resolution.png"), a.kdiss))
     print(fig_cost(plt, a.floor, os.path.join(a.out, "fig_cost.png")))
+    sj = "figures/well_vs_pysm/summary.json"
+    if os.path.exists(sj):
+        print(fig_dust_summary(plt, sj, os.path.join(a.out, "fig_dust_summary.png")))
 
 
 if __name__ == "__main__":

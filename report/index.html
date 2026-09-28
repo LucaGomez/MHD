@@ -214,14 +214,33 @@ map wavenumber is a box wavenumber, and the band is k = 3–9 — the range wher
   each family; the dashed line is the Planck value where one exists.</figcaption>
 </figure>
 
+<div class="scroll">
+<table>
+  <caption>How far off, in units of how much one dust patch differs from another
+  (half the 16–84% spread of d10 over its 72 patches)</caption>
+  <thead><tr><th>statistic</th><th>the three dust models differ by</th><th>simulations sit away by</th></tr></thead>
+  <tbody>
+    <tr class="mark"><td>α<sub>EE</sub></td><td>0.2</td><td>1.4 – 2.6</td></tr>
+    <tr><td>α<sub>BB</sub></td><td>0.7</td><td>0.2 – 1.0</td></tr>
+    <tr class="mark"><td>BB/EE</td><td>0.2</td><td>1.4 – 2.5</td></tr>
+    <tr><td>r<sub>TE</sub></td><td>0.8</td><td>0.5 – 3.7</td></tr>
+    <tr><td>S</td><td>0.7</td><td>0.6 – 2.2</td></tr>
+  </tbody>
+</table>
+</div>
+
 <div class="key">
   <p class="eyebrow">the honest result</p>
-  <p><b>None of these boxes reproduces the dust models.</b> Three differences are
-  systematic across every simulation: E-modes are too shallow (−1.90 to −2.32
-  against −2.78 to −2.85), there is too much B relative to E (0.96–1.25 against
-  0.56–0.61 — the same excess our own solver shows against the paper's 0.55), and
-  the T–E correlation misses in a field-dependent way, overshooting for weak mean
-  fields and undershooting for strong ones.</p>
+  <p><b>The spectral shapes are reasonable; the E/B asymmetry is not.</b> B-mode
+  slopes land inside the patch-to-patch scatter of the dust models, and so does the
+  angle dispersion for some parameter choices — map by map nobody could tell those
+  apart. What is systematic is that E-mode slopes are too shallow by 0.5–0.9, and
+  that BB/EE is ≈ 1.0 where the dust models sit at ≈ 0.58 and Planck measures 0.53.
+  The sky's 2:1 excess of E over B is the most studied feature of dust
+  polarization and the subject of the paper this project set out to reproduce; a
+  box with BB/EE ≈ 1 has none of it, so a network trained on these maps would learn
+  a foreground with about 70% too much B relative to E — an error in exactly the
+  channel the experiment cares about.</p>
 </div>
 
 <div class="status">

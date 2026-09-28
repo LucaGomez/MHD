@@ -15,6 +15,6 @@ src/mhd
 __pycache__/
 *.pyc
 
-# papers (not ours to redistribute)
-*.pdf
+# papers (not ours to redistribute); docs/summary.pdf is ours and is tracked
+/*.pdf
 Enzo_Build

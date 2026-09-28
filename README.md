@@ -66,7 +66,7 @@ decomposition, the shell-averaged spectra and the power-law fits.
 |---|---|---|---|
 | 1 | Does our own solver reproduce the paper's Table 1? | Slopes yes, B-mode amplitude no | [results/01](results/01_own_solver_convergence.txt) |
 | 2 | Do public MHD data reproduce it? | Yes, with the same B-mode exception | [results/03](results/03_well_table1_reproduction.txt) |
-| 3 | Do simulated maps look like real dust (PySM3)? | No — none of them, once measured in the band where the boxes are physical | [results/04](results/04_sims_vs_pysm3.txt) |
+| 3 | Do simulated maps look like real dust (PySM3)? | Spectral shapes yes, E/B asymmetry no (BB/EE ≈ 1 against 0.58) | [results/04](results/04_sims_vs_pysm3.txt) |
 | 4 | Why did the 512³ Enzo box stall? | Alfvén speed in empty cells | [results/02](results/02_enzo512_cost.txt) |
 | 5 | Does the fix change the physics? | No, within the scatter | [results/06](results/06_alfven_limiter_test.txt) |
 | 6 | Is 256³ enough for 128×128 CNN maps? | Enough pixels; the usable scale range is narrow (k = 3–9) | [results/07](results/07_resolution_256.txt) |
@@ -125,15 +125,42 @@ Simulated maps are whole projected faces binned to 128², so that patch k = box 
 
 ![statistics](figures/well_vs_pysm/stats.png)
 
-**None of these boxes reproduces the dust models.** Three differences are
-systematic across every simulation and every dust model:
+**How far off are they?** Measured against how much the dust models vary from
+patch to patch — and, for scale, how much the three dust models differ from each
+other:
 
-- **E-modes are too shallow**: α_EE between −1.90 and −2.32 against −2.78 to −2.85.
-- **Too much B relative to E**: BB/EE from 0.96 to 1.25 against 0.56 to 0.61.
-  This is the same excess our own solver shows against the paper's 0.55 (§2.1).
-- **The T–E correlation is not reproduced as a function of field strength**:
-  weak-field boxes overshoot (0.51–0.55 against 0.17–0.30), strong-field boxes
-  undershoot (0.08–0.21).
+| statistic | d1 vs d12 differ by | simulations sit away by |
+|---|---|---|
+| α_EE | 0.2 | **1.4 – 2.6** |
+| α_BB | 0.7 | 0.2 – 1.0 |
+| BB/EE | 0.2 | **1.4 – 2.5** |
+| r_TE | 0.8 | 0.5 – 3.7 |
+| S | 0.7 | 0.6 – 2.2 |
+
+(units: half the 16–84% spread of PySM3 d10 across its 72 patches)
+
+**The spectral shapes are reasonable; the E/B asymmetry is not.** B-mode slopes
+land inside the patch-to-patch scatter, and so does the angle dispersion for some
+parameter choices — map by map, nobody could tell those apart. Two things are
+systematic rather than scatter:
+
+1. **E-mode slopes are too shallow by 0.5–0.9**, where three independent dust
+   models agree with each other to 0.07.
+2. **BB/EE is ≈ 1.0 instead of ≈ 0.58**, where the dust models agree to 0.04 and
+   Planck measures 0.53.
+
+The second is the one that matters here. The sky's roughly 2:1 excess of E over B
+is the most studied feature of dust polarization, it is the subject of the paper
+this project set out to reproduce, and B-modes are what the CNN exists to remove.
+A box with BB/EE ≈ 1 has no asymmetry at all, so a network trained on such maps
+would learn a foreground with about 70% too much B relative to E — an error in
+precisely the channel the experiment cares about.
+
+Three caveats cut the other way, and none of them rescues BB/EE, since every box
+at every parameter pair lands near 1: the Enzo row is a single snapshot taken
+before the run reached a statistically steady state; no box measured here sits at
+M_A ≈ 1.5 with good statistics; and the band is narrow (k = 3–9). They do mean
+the E-mode slope gap is not yet settled.
 
 The polarization fraction of a simulation is p/p₀ and needs the intrinsic grain
 fraction p₀ before it can be compared with the dust models' p; with the usual
